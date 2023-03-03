@@ -24,14 +24,19 @@ namespace EduApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+            return await _context.Students
+                                .Include(x => x.Major)
+                                    .ThenInclude(x => x.Description)
+                                 .ToListAsync();
         }
 
         // GET: api/Students/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var student = await _context.Students
+                                          .Include(x => x.Major)
+                                            .SingleOrDefaultAsync(x => x.Id == id);
 
             if (student == null)
             {
@@ -45,7 +50,9 @@ namespace EduApi.Controllers
         // GET: api/Students/login/
         [HttpGet("login/{email}/{password}")]
         public async Task<ActionResult<Student>> StudentLogin(string email, string password) {
-            var student = await _context.Students.SingleOrDefaultAsync(x => (x.Email == email) && (x.Password == password));
+            var student = await _context.Students
+                .Include(x => x.Major)
+                .SingleOrDefaultAsync(x => (x.Email == email) && (x.Password == password));
             if(student is null) {
                 return NotFound();
             }
