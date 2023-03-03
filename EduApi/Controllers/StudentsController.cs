@@ -41,6 +41,18 @@ namespace EduApi.Controllers
             return student;
         }
 
+        // *******Handmade Student Login GET
+        // GET: api/Students/login/
+        [HttpGet("login/{email}/{password}")]
+        public async Task<ActionResult<Student>> StudentLogin(string email, string password) {
+            var student = await _context.Students.SingleOrDefaultAsync(x => (x.Email == email) && (x.Password == password));
+            if(student is null) {
+                return NotFound();
+            }
+            return student;
+        }
+
+
         // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -71,6 +83,20 @@ namespace EduApi.Controllers
 
             return NoContent();
         }
+
+        // POST: api/Students/seed
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("seed")]
+        public async Task<IActionResult> SeedStudents() {
+
+            foreach (var stu in Student.SeedStudents) {
+                _context.Students.Add(stu);
+            }
+            var changes = await _context.SaveChangesAsync();
+            if (changes == 0) throw new Exception("Seed data failed!");
+            return Ok();
+        }
+
 
         // POST: api/Students
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
