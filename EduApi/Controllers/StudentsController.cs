@@ -69,12 +69,12 @@ namespace EduApi.Controllers
                 return BadRequest();
             }
 
+            SetOnReview(student);   //<<<<<<<<<<<<<<<<<<<<Handmade call to SetOnReview
             _context.Entry(student).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
-            SetOnReview(student);   //<<<<<<<<<<<<<<<<<<<<Handmade call to SetOnReview
             }
             catch (DbUpdateConcurrencyException)
             {
