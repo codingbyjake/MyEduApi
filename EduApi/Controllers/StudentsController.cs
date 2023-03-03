@@ -12,7 +12,7 @@ namespace EduApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class StudentsController : ControllerBase
-    {
+    {//start of class
         private readonly EduDbContext _context;
 
         public StudentsController(EduDbContext context)
@@ -26,8 +26,7 @@ namespace EduApi.Controllers
         {
             return await _context.Students
                                 .Include(x => x.Major)
-                                    .ThenInclude(x => x.Description)
-                                 .ToListAsync();
+                                .ToListAsync();
         }
 
         // GET: api/Students/5
@@ -75,6 +74,7 @@ namespace EduApi.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+            SetOnReview(student);   //<<<<<<<<<<<<<<<<<<<<Handmade call to SetOnReview
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -136,5 +136,15 @@ namespace EduApi.Controllers
         {
             return _context.Students.Any(e => e.Id == id);
         }
-    }
+
+        public void SetOnReview(Student stu) {
+            if(stu.SAT < stu.Major?.MinSat) {
+                stu.OnReview = true;
+            }
+            else {
+                stu.OnReview = false;
+            }
+        }
+
+    }//end of class
 }

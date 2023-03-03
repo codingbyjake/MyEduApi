@@ -17,6 +17,7 @@ namespace EduApi.Models {
         public string Email { get; set; } = string.Empty;        
         [StringLength(20)]
         public string Password { get; set; } = string.Empty;
+        public bool OnReview { get; set; } = false;
 
 
         public int MajorId { get; set; }
