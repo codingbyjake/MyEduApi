@@ -72,6 +72,19 @@ namespace EduApi.Controllers
             return NoContent();
         }
 
+        //**********Handmade Seed Majors POST
+        // POST: api/Majors/seed
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("seed")]
+        public async Task<ActionResult> PostMajor() {
+            foreach (var maj in Major.SeedMajors) {
+            _context.Majors.Add(maj);
+            }
+            var changes = await _context.SaveChangesAsync();
+            if (changes == 0) throw new Exception("Majors seed failed!");
+            return Ok();
+        }
+
         // POST: api/Majors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
