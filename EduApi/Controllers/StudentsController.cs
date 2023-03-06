@@ -126,8 +126,8 @@ namespace EduApi.Controllers
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
             await _context.SaveChangesAsync();
+            _context.Students.Remove(student);
 
             return NoContent();
         }
@@ -137,13 +137,14 @@ namespace EduApi.Controllers
             return _context.Students.Any(e => e.Id == id);
         }
 
-        public void SetOnReview(Student stu) {
+        public async void SetOnReview(Student stu) {
             if(stu.SAT < stu.Major?.MinSat) {
                 stu.OnReview = true;
             }
             else {
                 stu.OnReview = false;
             }
+            await _context.SaveChangesAsync();
         }
 
     }//end of class
